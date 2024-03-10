@@ -261,9 +261,9 @@ public class main {
         System.out.println("you can choose up to 10 answers maximum!\n");
 
         // setting up the Query
-        ArrayList<Answer> AnswerList = new ArrayList<Answer>();
+        ArrayList<AnswerAdapter> answerAdapterList = new ArrayList<AnswerAdapter>();
         closedQuery newClosedQuery = new closedQuery(Ques, Query.difficulty.values()[diff], SRV.getQR(SubIn),
-                AnswerList);
+                answerAdapterList);
         if (SRV.getQR(SubIn).addItemToRepo(newClosedQuery)) {
             System.out.println("Query added!");
         } else {
@@ -302,7 +302,7 @@ public class main {
         if (ansChoose == -1)
             addOpenQ_4(diff, Ques);
 
-        Answer newOpenAns = new Answer(ansChoose, SRV.getAR(SubIn), Answer.eType.open);
+        AnswerAdapter newOpenAns = new AnswerAdapter(ansChoose, SRV.getAR(SubIn), AnswerAdapter.eType.open);
         newOpenQuery = new openQuery(Ques, Query.difficulty.values()[diff], SRV.getQR(SubIn), newOpenAns);
 
         if (SRV.getQR(SubIn).addItemToRepo(newOpenQuery)) {
@@ -351,7 +351,7 @@ public class main {
         Predicate<Integer> pr = i -> ((SR.getRepo(SubIn).getAR().isInLimitedArray(i, q.getAnswerList())));
         int ansToAdd = checkInput(pr, "")-1;
 
-        Answer nA = new Answer(ansToAdd, b, SRV.getAR(SubIn), Answer.eType.close);
+        AnswerAdapter nA = new AnswerAdapter(ansToAdd, b, SRV.getAR(SubIn), AnswerAdapter.eType.close);
         try {
             return ((closedQuery) SRV.getQuery(SubIn, qIndex)).addAnswerToQuery(nA);
         } catch (AnswerException e) {
@@ -395,8 +395,8 @@ public class main {
             System.out.println("please write a new answer: \n");
             String newAns = s.nextLine();
             SRV.addAnswer(SubIn, newAns);
-            Answer nA = new Answer(SRV.getAR(SubIn).length() - 1, SRV.getAR(SubIn),
-                    Answer.eType.open);
+            AnswerAdapter nA = new AnswerAdapter(SRV.getAR(SubIn).length() - 1, SRV.getAR(SubIn),
+                    AnswerAdapter.eType.open);
             ((openQuery) SRV.getQuery(SubIn, qIndex)).setSchoolAnswer(nA);
         } else {
             SRV.ARtoString(SubIn);
@@ -405,7 +405,7 @@ public class main {
                 System.out.println("choose an answer from the repository: ");
                 ansToAdd = s.nextInt();
             } while (ansToAdd < SRV.getARlength(SubIn));
-            Answer nA = new Answer(ansToAdd, SRV.getAR(SubIn), Answer.eType.open);
+            AnswerAdapter nA = new AnswerAdapter(ansToAdd, SRV.getAR(SubIn), AnswerAdapter.eType.open);
             ((openQuery) SRV.getQuery(SubIn, qIndex)).setSchoolAnswer(nA);
         }
     }
@@ -458,7 +458,7 @@ public class main {
     public static closedQuery closedQueryWithSpesificAns(QueryRepository Querries, int i) throws Exception {
         closedQuery q = (closedQuery) Querries.getRepo(i);
         closedQuery copyQ = new closedQuery(q.getQues(), q.getDiff(), q.getQR(), q.getAnswerList());
-        ArrayList<Answer> al = new ArrayList<>();
+        ArrayList<AnswerAdapter> al = new ArrayList<>();
         q.setAnswerList(al);
         char b = 0;
         do {
@@ -543,7 +543,7 @@ public class main {
                 ArrayList<Integer> ansToAdd = randomArrayInRange(9);
                 for (int w = 0; w < 3; w++)
                     ansToAdd.remove(w);
-                ArrayList<Answer> al = new ArrayList<>();
+                ArrayList<AnswerAdapter> al = new ArrayList<>();
                 closedQuery q = new closedQuery("closed " + i, Query.difficulty.medium, SRV.getQR(j), al);
                 for (int k = 0; k < 5; k++) {
                     Boolean bool = (k % 2 == 0) ? (true) : (false);
@@ -554,7 +554,7 @@ public class main {
             }
             ArrayList<Integer> ansToAdd = randomArrayInRange(9);
             for (int i = 0; i < 9; i++) {
-                Answer a = new Answer(ansToAdd.get(i), SRV.getAR(j), Answer.eType.open);
+                AnswerAdapter a = new AnswerAdapter(ansToAdd.get(i), SRV.getAR(j), AnswerAdapter.eType.open);
                 openQuery q = new openQuery("open " + i, Query.difficulty.hard, SRV.getQR(j), a);
                 SRV.addQuery(q, j);
             }

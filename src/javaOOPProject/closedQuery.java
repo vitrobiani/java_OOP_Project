@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 
-public class closedQuery extends Query implements Iterable<Answer> {
+public class closedQuery extends Query implements Iterable<AnswerAdapter> {
     /**
      *
      */
@@ -13,76 +13,76 @@ public class closedQuery extends Query implements Iterable<Answer> {
     private static final int maxAns = 10;
     private static final int minAns = 3;
 
-    private ArrayList<Answer> AnswerList;
+    private ArrayList<AnswerAdapter> answerAdapterList;
 
-    public closedQuery(String q, difficulty diff, QueryRepository QR, ArrayList<Answer> AnswerList) {
+    public closedQuery(String q, difficulty diff, QueryRepository QR, ArrayList<AnswerAdapter> answerAdapterList) {
         super(q, diff, QR);
-        this.AnswerList = AnswerList;
+        this.answerAdapterList = answerAdapterList;
     }
 
     public closedQuery(String q, difficulty diff, QueryRepository QR) {
         super(q, diff, QR);
     }
 
-    public boolean isAnswerInQuery(Answer cA) {
-        return AnswerList.contains(cA);
+    public boolean isAnswerInQuery(AnswerAdapter cA) {
+        return answerAdapterList.contains(cA);
     }
 
     public boolean addAnswerToQuery(int AnsI, boolean isCorrect, AnswerRepository AR) {
-        Answer cA = new Answer(AnsI, isCorrect, AR, Answer.eType.close);
-        if (!(isAnswerInQuery(cA)) && AnswerList.size() <= maxAns) {
-            AnswerList.add(cA);
+        AnswerAdapter cA = new AnswerAdapter(AnsI, isCorrect, AR, AnswerAdapter.eType.close);
+        if (!(isAnswerInQuery(cA)) && answerAdapterList.size() <= maxAns) {
+            answerAdapterList.add(cA);
             return true;
         }
         return false;
     }
 
-    public boolean addAnswerToQuery(Answer cA) throws Exception {
-        if ((isAnswerInQuery(cA)) || (AnswerList.size() >= maxAns)) {
+    public boolean addAnswerToQuery(AnswerAdapter cA) throws Exception {
+        if ((isAnswerInQuery(cA)) || (answerAdapterList.size() >= maxAns)) {
             throw new AnswerException();
         }
-        AnswerList.add(cA);
+        answerAdapterList.add(cA);
         return true;
     }
 
     public void rmAnAnswer(int aIndex) {
-        AnswerList.remove(aIndex);
+        answerAdapterList.remove(aIndex);
     }
 
     public int getMaxAns() {
         return maxAns;
     }
 
-    public ArrayList<Answer> getAnswerList() {
-        return AnswerList;
+    public ArrayList<AnswerAdapter> getAnswerList() {
+        return answerAdapterList;
     }
 
     public ArrayList<String> getStringAnswerList() {
         ArrayList<String> StringAnswerList = new ArrayList<>();
 
         for (int i = 0; i < StringAnswerList.size(); i++) {
-            StringAnswerList.add(AnswerList.get(i).getAnswer());
+            StringAnswerList.add(answerAdapterList.get(i).getAnswer());
         }
         return StringAnswerList;
     }
 
-    public void setAnswerList(ArrayList<Answer> answerList) {
-        AnswerList = answerList;
+    public void setAnswerList(ArrayList<AnswerAdapter> answerAdapterList) {
+        this.answerAdapterList = answerAdapterList;
     }
 
     @Override
     public String toStringForTestRes() {
         StringBuffer sB = new StringBuffer(super.toString());
         int howManyCorrect = 0;
-        for (int i = 0; i < AnswerList.size(); i++) {
-            if (AnswerList.get(i).isCorrect()) {
+        for (int i = 0; i < answerAdapterList.size(); i++) {
+            if (answerAdapterList.get(i).isCorrect()) {
                 howManyCorrect++;
             }
         }
         int i = 0;
-        for (; i < AnswerList.size(); i++) {
-            sB.append("    " + (i + 1) + ")  " + AnswerList.get(i).getAnswer()
-                    + ((AnswerList.get(i).isCorrect() && (howManyCorrect == 1)) ? "  |T|" : "  |F|") + '\n');
+        for (; i < answerAdapterList.size(); i++) {
+            sB.append("    " + (i + 1) + ")  " + answerAdapterList.get(i).getAnswer()
+                    + ((answerAdapterList.get(i).isCorrect() && (howManyCorrect == 1)) ? "  |T|" : "  |F|") + '\n');
         }
         sB.append("    " + (++i) + ")  some of the answers are correct" + ((howManyCorrect > 1) ? "  |T|" : "  |F|")
                 + '\n');
@@ -107,12 +107,12 @@ public class closedQuery extends Query implements Iterable<Answer> {
 
     @Override
     public String toStringForTest() {
-        ArrayList<Integer> printRandom = randomArrayInRange(AnswerList.size());
+        ArrayList<Integer> printRandom = randomArrayInRange(answerAdapterList.size());
 
         StringBuffer sB = new StringBuffer(super.toString());
         int i = 0;
-        for (; i < AnswerList.size(); i++) {
-            sB.append("    " + (i + 1) + ")  " + AnswerList.get(printRandom.get(i) - 1).getAnswer() + '\n');
+        for (; i < answerAdapterList.size(); i++) {
+            sB.append("    " + (i + 1) + ")  " + answerAdapterList.get(printRandom.get(i) - 1).getAnswer() + '\n');
         }
         sB.append("    " + (++i) + ")  some of the answers are correct" + '\n');
         sB.append("    " + (++i) + ")  none of the answers are correct" + '\n');
@@ -124,7 +124,7 @@ public class closedQuery extends Query implements Iterable<Answer> {
         StringBuffer sB = new StringBuffer(super.toString());
 
         int i = 0;
-        for (Answer a : AnswerList) {
+        for (AnswerAdapter a : answerAdapterList) {
             sB.append("    " + (i + 1) + ")  " + a.getAnswer() + ((a.isCorrect()) ? "  |T|" : "  |F|") + '\n');
             i++;
         }
@@ -134,7 +134,7 @@ public class closedQuery extends Query implements Iterable<Answer> {
 
     public boolean equals(closedQuery q) {
         boolean b = true;
-        for (int i = 0; i < AnswerList.size(); i++) {
+        for (int i = 0; i < answerAdapterList.size(); i++) {
             if (!(q.getAnswerList().get(i).equals(q.getAnswerList().get(i)))) {
                 b = false;
             }
@@ -147,8 +147,8 @@ public class closedQuery extends Query implements Iterable<Answer> {
     }
 
     @Override
-    public Iterator<Answer> iterator() {
-        return new GenericIterator<>(AnswerList);
+    public Iterator<AnswerAdapter> iterator() {
+        return new GenericIterator<>(answerAdapterList);
     }
 
 }

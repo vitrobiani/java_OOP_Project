@@ -19,11 +19,11 @@ public class AnswerRepository extends Repository<String> implements Serializable
     }
 
     // so that the user won't see the answer he already chose
-    public String closedAnsLimitedtoString(ArrayList<Answer> AnswerList) {
+    public String closedAnsLimitedtoString(ArrayList<AnswerAdapter> answerAdapterList) {
         StringBuffer A = new StringBuffer();
         A.append("\n the closed answers: \n");
         for (int i = 0, j = 0; i < length(); i++) {
-            if (j > AnswerList.size()-1 || !isInLimitedArray(i, AnswerList)) {
+            if (j > answerAdapterList.size()-1 || !isInLimitedArray(i, answerAdapterList)) {
                 String temp = ((i + 1) + ")  " + repo.get(i) + "\n");
                 A.append(temp);
             }
@@ -33,19 +33,19 @@ public class AnswerRepository extends Repository<String> implements Serializable
 
     // Receives an answer array and returns an int array of the indexes in the rep
     // Important for showing only the unchosen answers when creating a query
-    public ArrayList<Integer> closedAnsLimitedArray(ArrayList<Answer> AnswerList) {
+    public ArrayList<Integer> closedAnsLimitedArray(ArrayList<AnswerAdapter> answerAdapterList) {
         ArrayList<Integer> newAnswerList = new ArrayList<>();
 
-        for (int i = 0; i < AnswerList.size(); i++) {
-            newAnswerList.add(AnswerList.get(i).getAnswerIndex());
+        for (int i = 0; i < answerAdapterList.size(); i++) {
+            newAnswerList.add(answerAdapterList.get(i).getAnswerIndex());
         }
         return newAnswerList;
 
     }
 
-    public boolean isInLimitedArray(int i, ArrayList<Answer> AnswerList) {
-        for (int j = 0; j < AnswerList.size(); j++) {
-            if (i == AnswerList.get(j).getAnswerIndex())
+    public boolean isInLimitedArray(int i, ArrayList<AnswerAdapter> answerAdapterList) {
+        for (int j = 0; j < answerAdapterList.size(); j++) {
+            if (i == answerAdapterList.get(j).getAnswerIndex())
                 return true;
         }
         return false;

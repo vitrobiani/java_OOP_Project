@@ -72,14 +72,14 @@ public class createExam implements Examable {
     public closedQuery closedQueryWithSpesificAns(closedQuery q) throws Exception {
         Random r = new Random();
         closedQuery copyQ = new closedQuery(q.getQues(), q.getDiff(), q.getQR(), q.getAnswerList());
-        ArrayList<Answer> AnswerList = new ArrayList<>();
-        closedQuery copyq = new closedQuery(q.getQues(), q.getDiff(), q.getQR(), AnswerList);
-        copyq.setAnswerList(AnswerList);
+        ArrayList<AnswerAdapter> answerAdapterList = new ArrayList<>();
+        closedQuery copyq = new closedQuery(q.getQues(), q.getDiff(), q.getQR(), answerAdapterList);
+        copyq.setAnswerList(answerAdapterList);
 
         ArrayList<Integer> randomAns = randomArrayInRange(autoAns);
 
         for (int j = 0; j < randomAns.size(); j++) {
-            Answer a = copyQ.getAnswerList().get(randomAns.get(j));
+            AnswerAdapter a = copyQ.getAnswerList().get(randomAns.get(j));
             copyq.addAnswerToQuery(a);
         }
         return copyq;

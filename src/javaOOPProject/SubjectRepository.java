@@ -8,9 +8,18 @@ public class SubjectRepository extends Repository<Subject> implements Serializab
      *
      */
     private static final long serialVersionUID = 1L;
+    private static SubjectRepository[] _instance = new SubjectRepository[1];
 
-    public SubjectRepository() {
+
+    private SubjectRepository() {
         repo = new ArrayList<>();
+    }
+
+    public static SubjectRepository getInstance() {
+        if (_instance[0] == null) {
+            _instance[0] = new SubjectRepository();
+        }
+        return _instance[0];
     }
 
     public String getName(int i) {
@@ -20,6 +29,7 @@ public class SubjectRepository extends Repository<Subject> implements Serializab
     public void setName(String name, int i) {
         repo.get(i).setName(name);
     }
+
 
     @Override
     public String toString() {

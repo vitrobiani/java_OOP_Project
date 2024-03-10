@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 public class main {
     public static Scanner s = new Scanner(System.in);
     public static int SubIn = 0;
-    public static SubjectRepository SR = new SubjectRepository();
+    public static SubjectRepository SR = SubjectRepository.getInstance();
     public static fileFunctions ff = new fileFunctions();
     public static Services SRV = new Services(SR);
 
@@ -41,8 +41,6 @@ public class main {
 
         try {
             do {
-
-
                 System.out.println(mesg);
                 String input = s.next();
                 try {
@@ -142,6 +140,9 @@ public class main {
 
     public static void lobby() throws Exception {
         int choise = 0;
+        Command printAnswersCom = new printAllAnswersCommand(SR, SubIn);
+        Command printQuerriesCom = new printAllQuerriesCommand(SR, SubIn);
+        Command addAnswerCom = new addAnswerCommand();
         do {
 //			SRV.setSR(SR);
             System.out.println(
@@ -158,15 +159,15 @@ public class main {
 
             switch (choise) {
                 case 1: {
-                    printAll_1();
+                    printQuerriesCom.execute();
                     break;
                 }
                 case 2: {
-                    printAnsRep_2();
+                    printAnswersCom.execute();
                     break;
                 }
                 case 3: {
-                    addNewAnswerToRepository_3();
+                    addAnswerCom.execute();
                     break;
                 }
                 case 4: {
@@ -560,4 +561,4 @@ public class main {
         }
     }
 
-}
+}//you bloody bastard

@@ -44,9 +44,10 @@ public class AnswerRepository extends Repository<String> implements Serializable
     }
 
     public boolean isInLimitedArray(int i, ArrayList<AnswerAdapter> answerAdapterList) {
-        for (int j = 0; j < answerAdapterList.size(); j++) {
-            if (i == answerAdapterList.get(j).getAnswerIndex())
+        for (AnswerAdapter a : answerAdapterList) {
+            if (a.getAnswerIndex() == i) {
                 return true;
+            }
         }
         return false;
     }

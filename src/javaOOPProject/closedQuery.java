@@ -12,7 +12,6 @@ public class closedQuery extends Query implements Iterable<AnswerAdapter> {
     private static final long serialVersionUID = 1L;
     private static final int maxAns = 10;
     private static final int minAns = 3;
-
     private ArrayList<AnswerAdapter> answerAdapterList;
 
     public closedQuery(String q, difficulty diff, QueryRepository QR, ArrayList<AnswerAdapter> answerAdapterList) {
@@ -29,7 +28,7 @@ public class closedQuery extends Query implements Iterable<AnswerAdapter> {
     }
 
     public boolean addAnswerToQuery(int AnsI, boolean isCorrect, AnswerRepository AR) {
-        AnswerAdapter cA = new AnswerAdapter(AnsI, isCorrect, AR, AnswerAdapter.eType.close);
+        AnswerAdapter cA = new AnswerAdapter(AnsI, isCorrect, AR, hw3_Answer.eType.close);
         if (!(isAnswerInQuery(cA)) && answerAdapterList.size() <= maxAns) {
             answerAdapterList.add(cA);
             return true;

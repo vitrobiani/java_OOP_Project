@@ -1,6 +1,8 @@
 package javaOOPProject;
 
-public class hw3_Answer {
+import java.io.Serializable;
+
+public class hw3_Answer implements Serializable {
     /**
      *
      */
@@ -12,11 +14,11 @@ public class hw3_Answer {
         open, close
     };
 
-    protected AnswerAdapter.eType type;
+    protected hw3_Answer.eType type;
     private AnswerRepository AR;
 
     // for the closed questions - need to set isCorrect
-    public hw3_Answer(int AnsI, boolean isCorrect, AnswerRepository AR, AnswerAdapter.eType type) {
+    public hw3_Answer(int AnsI, boolean isCorrect, AnswerRepository AR, hw3_Answer.eType type) {
         AnswerIndex = AnsI;
         this.isCorrect = isCorrect;
         this.AR = AR;
@@ -24,7 +26,7 @@ public class hw3_Answer {
     }
 
     // for the open question - school answer is always true
-    public hw3_Answer(int AnsI, AnswerRepository AR, AnswerAdapter.eType type) {
+    public hw3_Answer(int AnsI, AnswerRepository AR, hw3_Answer.eType type) {
         AnswerIndex = AnsI;
         this.AR = AR;
         this.type = type;
@@ -65,7 +67,7 @@ public class hw3_Answer {
     }
 
     public boolean hw3_equals(AnswerAdapter a) {
-        if (a.type == type && a.getAnswerIndex() == AnswerIndex && a.getType() == type) {
+        if (a.getType() == type && a.getAnswerIndex() == AnswerIndex && a.getType() == type) {
             return true;
         }
         return false;

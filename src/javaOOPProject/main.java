@@ -144,7 +144,6 @@ public class main {
         Command printQuerriesCom = new printAllQuerriesCommand(SR, SubIn);
         Command addAnswerCom = new addAnswerCommand();
         do {
-//			SRV.setSR(SR);
             System.out.println(
                     "the subject: " + SR.getName(SubIn) + "\n hello what would you like to do? \n"
                             + "1. print out all the questions and its answers in the repository \n"
@@ -251,46 +250,45 @@ public class main {
             }
         } while (addAnsToRep != 'n');
 
+        Creator<Query> creator = new QueryCreator();
         if (qType == 'c')
-            addClosedQ_4(diff, Ques);
+            addClosedQ_4(diff, Ques, creator);
         else
-            addOpenQ_4(diff, Ques);
+            addOpenQ_4(diff, Ques, creator);
     }
 
-    public static void addClosedQ_4(int diff, String Ques) throws AnswerException {
+    public static void addClosedQ_4(int diff, String Ques, Creator creator) throws AnswerException {
         System.out.println("you can choose up to 10 answers maximum!\n");
 
         // setting up the Query
         ArrayList<AnswerAdapter> answerAdapterList = new ArrayList<AnswerAdapter>();
-        closedQuery newClosedQuery = new closedQuery(Ques, Query.difficulty.values()[diff], SRV.getQR(SubIn),
-                answerAdapterList);
-        if (SRV.getQR(SubIn).addItemToRepo(newClosedQuery)) {
-            System.out.println("Query added!");
+        closedQuery newClosedQuery = (closedQuery) creator.create(Ques, SRV.getQR(SubIn), SRV.getAR(SubIn), Query.difficulty.values()[diff], hw3_Answer.eType.close);
+        if (SRV.addQuery(SubIn, newClosedQuery)) {
+            System.out.println("Query added!, now add Answers!");
         } else {
             System.out.println("Query already exists");
         }
 
         int addedAnswers = 0;
-        char addAns = 0;
+        char addAns = 'n';
         do {
             if (addAnswerToClosedQuery_5(SRV.getQR(SubIn).length()-1)) {
                 System.out.println("Answer Added!");
+                addedAnswers++;
             }else {
                 System.out.println("Answer Was Not Added!");
             }
 
-            Predicate<Character> c = i -> (i != 'n' && i != 'y');
-            if (addedAnswers > 3 && addedAnswers < 10) {
+            if (addedAnswers >= 3) {
+                Predicate<Character> c = i -> (i != 'n' && i != 'y');
                 addAns = checkInput(c,"would you like to add another answer? <y/n>");
-            }else {
-                addAns = 'n';
             }
-        } while (addedAnswers < 3 || addAns != 'n');
 
+        } while (addedAnswers < 3 || addAns != 'n');
     }
 
-    public static void addOpenQ_4(int diff, String Ques) {
-        openQuery newOpenQuery;
+    public static void addOpenQ_4(int diff, String Ques, Creator creator) {
+        openQuery newOpenQuery = (openQuery) creator.create(Ques, SRV.getQR(SubIn), SRV.getAR(SubIn), Query.difficulty.values()[diff], hw3_Answer.eType.open);
 
         System.out.println(SRV.ARtoString(SubIn));
         System.out.println("enter 0 to go back");
@@ -300,12 +298,12 @@ public class main {
         int ansChoose = checkInput(p,"")-1;
 
         if (ansChoose == -1)
-            addOpenQ_4(diff, Ques);
+            addOpenQ_4(diff, Ques, creator);
 
-        AnswerAdapter newOpenAns = new AnswerAdapter(ansChoose, SRV.getAR(SubIn), AnswerAdapter.eType.open);
-        newOpenQuery = new openQuery(Ques, Query.difficulty.values()[diff], SRV.getQR(SubIn), newOpenAns);
+        AnswerAdapter newOpenAns = new AnswerAdapter(ansChoose, SRV.getAR(SubIn), hw3_Answer.eType.open);
+        newOpenQuery.setSchoolAnswer(newOpenAns);
 
-        if (SRV.getQR(SubIn).addItemToRepo(newOpenQuery)) {
+        if (SRV.addQuery(SubIn, newOpenQuery)) {
             System.out.println("Query added!");
         } else {
             System.out.println("Query already exists");
@@ -348,10 +346,10 @@ public class main {
         System.out.println("choose an answer from the repository to the Query: ");
         System.out.println(SRV.getAR(SubIn).closedAnsLimitedtoString(q.getAnswerList()));
 
-        Predicate<Integer> pr = i -> ((SR.getRepo(SubIn).getAR().isInLimitedArray(i, q.getAnswerList())));
+        Predicate<Integer> pr = i -> (i <= 0 || i > (SR.getRepo(SubIn).getAR().length()) || (SR.getRepo(SubIn).getAR().isInLimitedArray(i-1, q.getAnswerList())));
         int ansToAdd = checkInput(pr, "")-1;
 
-        AnswerAdapter nA = new AnswerAdapter(ansToAdd, b, SRV.getAR(SubIn), AnswerAdapter.eType.close);
+        AnswerAdapter nA = new AnswerAdapter(ansToAdd, b, SRV.getAR(SubIn), hw3_Answer.eType.close);
         try {
             return ((closedQuery) SRV.getQuery(SubIn, qIndex)).addAnswerToQuery(nA);
         } catch (AnswerException e) {
@@ -396,7 +394,7 @@ public class main {
             String newAns = s.nextLine();
             SRV.addAnswer(SubIn, newAns);
             AnswerAdapter nA = new AnswerAdapter(SRV.getAR(SubIn).length() - 1, SRV.getAR(SubIn),
-                    AnswerAdapter.eType.open);
+                    hw3_Answer.eType.open);
             ((openQuery) SRV.getQuery(SubIn, qIndex)).setSchoolAnswer(nA);
         } else {
             SRV.ARtoString(SubIn);
@@ -405,7 +403,7 @@ public class main {
                 System.out.println("choose an answer from the repository: ");
                 ansToAdd = s.nextInt();
             } while (ansToAdd < SRV.getARlength(SubIn));
-            AnswerAdapter nA = new AnswerAdapter(ansToAdd, SRV.getAR(SubIn), AnswerAdapter.eType.open);
+            AnswerAdapter nA = new AnswerAdapter(ansToAdd, SRV.getAR(SubIn), hw3_Answer.eType.open);
             ((openQuery) SRV.getQuery(SubIn, qIndex)).setSchoolAnswer(nA);
         }
     }
@@ -554,7 +552,7 @@ public class main {
             }
             ArrayList<Integer> ansToAdd = randomArrayInRange(9);
             for (int i = 0; i < 9; i++) {
-                AnswerAdapter a = new AnswerAdapter(ansToAdd.get(i), SRV.getAR(j), AnswerAdapter.eType.open);
+                AnswerAdapter a = new AnswerAdapter(ansToAdd.get(i), SRV.getAR(j), hw3_Answer.eType.open);
                 openQuery q = new openQuery("open " + i, Query.difficulty.hard, SRV.getQR(j), a);
                 SRV.addQuery(q, j);
             }
